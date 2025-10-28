@@ -1,16 +1,18 @@
 package com.example.youtubeapp.screen
 
-import android.R.attr.contentDescription
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -20,6 +22,7 @@ import com.example.youtubeapp.FirebaseStorageHelper
 import com.example.youtubeapp.VideoViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DispalyVideoScreen(videoModel: VideoViewModel = viewModel()) {
     val context = LocalContext.current
@@ -33,6 +36,17 @@ fun DispalyVideoScreen(videoModel: VideoViewModel = viewModel()) {
     }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "YouTube")
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Red,
+                    titleContentColor = Color.White
+                )
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -49,7 +63,11 @@ fun DispalyVideoScreen(videoModel: VideoViewModel = viewModel()) {
     ) { padding ->
         LazyColumn(
             contentPadding = padding
-        ) {}
+        ) {
+            items(videoModel.videoList, key = {it.storagePath} ) { video ->
+                VideoItem(video = video)
+            }
+        }
     }
 
 }

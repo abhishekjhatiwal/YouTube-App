@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.firebase.storage)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.graphics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -61,4 +63,17 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+
+    // Other dependencies...
+    val media3_version = "1.8.0" // Use the latest version
+    implementation("androidx.media3:media3-exoplayer:$media3_version")
+    implementation("androidx.media3:media3-ui:$media3_version")
+
+    // Add other modules as needed
+    implementation("androidx.media3:media3-exoplayer-dash:$media3_version") // For DASH support
+    implementation("androidx.media3:media3-exoplayer-hls:$media3_version")  // For HLS support
+
+    val composeBom = platform("androidx.compose:compose-bom:2024.10.00")
+    implementation(composeBom)
+    implementation("androidx.compose.material:material-icons-extended")
 }

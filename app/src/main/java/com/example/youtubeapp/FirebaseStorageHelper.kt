@@ -17,4 +17,14 @@ object FirebaseStorageHelper {
         val url = videoRef.downloadUrl.await()
         return VideoData(videoUrl = url.toString(), videoName = videoFileName, storagePath = videoRef.path)
     }
+
+    suspend fun fetchAllVideo() : List<VideoData>{
+        val result = firebaseStorage.listAll().await()
+        return result.items.mapNotNull{ ref->
+            val url = ref.downloadUrl.await().toString()
+            val name = ref.name
+            val path = ref.path
+            VideoData(videoUrl = url, videoName = name, storagePath = path)
+        }
+    }
 }

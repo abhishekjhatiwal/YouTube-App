@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.youtubeapp.FirebaseStorageHelper
+import com.example.youtubeapp.FirebaseStorageHelper.replaceVideo
 import com.example.youtubeapp.VideoViewModel
 import kotlinx.coroutines.launch
 
@@ -61,13 +62,22 @@ fun DispalyVideoScreen(videoModel: VideoViewModel = viewModel()) {
             }
         }
     ) { padding ->
+        val viewModelScope = videoModel.viewModelScope
         LazyColumn(
             contentPadding = padding
         ) {
-            items(videoModel.videoList, key = {it.storagePath} ) { video ->
-                VideoItem(video = video)
+            items(videoModel.videoList, key = { it.storagePath }) { video ->
+                VideoItem(
+                    video = video,
+                    onDelete = { viewModelScope.launch { videoModel.deleteVideo(it) } },
+                    onReplace = { uri ->
+                        viewModelScope.launch {
+                            replaceVideo((video.storagePath), uri, context)
+                        }
+                    }
+                )
             }
         }
-    }
 
+    }
 }

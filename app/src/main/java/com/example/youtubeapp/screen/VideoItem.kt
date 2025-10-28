@@ -1,12 +1,16 @@
 package com.example.youtubeapp.screen
 
-import android.graphics.Color
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
@@ -33,7 +37,7 @@ import com.example.youtubeapp.R
 import com.example.youtubeapp.data.VideoData
 
 @Composable
-fun VideoItem(video: VideoData) {
+fun VideoItem(video: VideoData, onDelete: (VideoData) -> Unit, onReplace: (Uri) -> Unit) {
     val context = LocalContext.current
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build()
@@ -63,6 +67,12 @@ fun VideoItem(video: VideoData) {
             exoPlayer.release()
         }
     }
+    val replaceLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                onReplace(it)
+            }
+        }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,6 +90,15 @@ fun VideoItem(video: VideoData) {
                     .fillMaxWidth()
                     .height(200.dp)
             )
+            IconButton(
+                modifier = Modifier.align(Alignment.TopEnd),
+                onClick = { onDelete(video) }) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = colorResource(id = R.color.white)
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -106,7 +125,11 @@ fun VideoItem(video: VideoData) {
                         contentDescription = if (isPlaying) "Pause" else "Play",
                         tint = whiteColor
                     )
-
+                }
+                IconButton(onClick = {
+                    replaceLauncher.launch("video/*")
+                }) {
+                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = whiteColor)
                 }
             }
         }

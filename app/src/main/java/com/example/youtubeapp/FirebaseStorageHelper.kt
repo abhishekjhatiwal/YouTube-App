@@ -27,4 +27,13 @@ object FirebaseStorageHelper {
             VideoData(videoUrl = url, videoName = name, storagePath = path)
         }
     }
+
+    suspend fun deleteVideo(path: String){
+        Firebase.storage.reference.child(path).delete().await()
+    }
+
+    suspend fun replaceVideo(oldPath: String, newUri: Uri, context: Context): VideoData{
+        deleteVideo(oldPath)
+        return uploadVideo(newUri,context)
+    }
 }

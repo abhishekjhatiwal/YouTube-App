@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
+//import androidx.compose.material.icons.filled.PlayArrow
+//import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,16 +27,214 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
+//import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
+//import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import com.example.youtubeapp.R
+//import com.example.youtubeapp.R
 import com.example.youtubeapp.data.VideoData
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 
+@Composable
+fun VideoItem(
+    video: VideoData,
+    onDelete: (VideoData) -> Unit,
+    onReplace: (Uri) -> Unit,
+    onVideoClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context).build()
+    }
+    var showMenu by remember { mutableStateOf(false) }
+
+    LaunchedEffect(video.videoUrl) {
+        exoPlayer.setMediaItem(MediaItem.fromUri(video.videoUrl))
+        exoPlayer.prepare()
+    }
+
+    DisposableEffect(video.videoUrl) {
+        onDispose {
+            exoPlayer.release()
+        }
+    }
+
+    val replaceLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                onReplace(it)
+            }
+        }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { onVideoClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Column {
+            // Video Thumbnail
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+            ) {
+                AndroidView(
+                    factory = {
+                        PlayerView(context).apply {
+                            player = exoPlayer
+                            useController = false
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                // Menu Button (Top Right)
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                ) {
+                    IconButton(
+                        onClick = { showMenu = true },
+                        modifier = Modifier
+                            .size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Menu",
+                            tint = Color.White
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Replace Video") },
+                            onClick = {
+                                showMenu = false
+                                replaceLauncher.launch("video/*")
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Edit, contentDescription = null)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Delete Video") },
+                            onClick = {
+                                showMenu = false
+                                onDelete(video)
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Delete, contentDescription = null)
+                            }
+                        )
+                    }
+                }
+            }
+
+            // Video Info Section (YouTube-like)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                // Channel Avatar
+                Surface(
+                    modifier = Modifier.size(36.dp),
+                    shape = CircleShape,
+                    color = Color.Red
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "YT",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Video Title and Channel Info
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = video.videoName,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "YouTube Channel • 1M views • 1 day ago",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 @Composable
 fun VideoItem(video: VideoData, onDelete: (VideoData) -> Unit, onReplace: (Uri) -> Unit) {
     val context = LocalContext.current
@@ -137,3 +335,5 @@ fun VideoItem(video: VideoData, onDelete: (VideoData) -> Unit, onReplace: (Uri) 
     }
 
 }
+
+ */

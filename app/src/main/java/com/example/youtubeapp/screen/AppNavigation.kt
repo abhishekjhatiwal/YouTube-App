@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.youtubeapp.VideoViewModel
+import com.example.youtubeapp.data.Screen
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {

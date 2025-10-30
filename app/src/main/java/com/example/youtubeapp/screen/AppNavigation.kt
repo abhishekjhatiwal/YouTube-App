@@ -20,7 +20,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route,
-        modifier = modifier
+        modifier = modifier,
+//        onVideoClick: (VideoModel) -> Unit = {}
     ) {
         composable(Screen.Home.route) {
             DisplayVideoScreen(

@@ -47,9 +47,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 navArgument("storagePath") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val videoUrl = backStackEntry.arguments?.getString("videoUrl")?.let { Uri.decode(it) } ?: ""
+            val videoUrl =
+                backStackEntry.arguments?.getString("videoUrl")?.let { Uri.decode(it) } ?: ""
             val videoName = backStackEntry.arguments?.getString("videoName") ?: ""
-            val storagePath = backStackEntry.arguments?.getString("storagePath")?.let { Uri.decode(it) } ?: ""
+            val storagePath =
+                backStackEntry.arguments?.getString("storagePath")?.let { Uri.decode(it) } ?: ""
 
             VideoPlayerScreen(
                 videoUrl = videoUrl,

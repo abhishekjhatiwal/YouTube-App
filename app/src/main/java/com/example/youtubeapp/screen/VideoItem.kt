@@ -30,7 +30,7 @@ fun VideoItem(
     video: VideoData,
     onDelete: (VideoData) -> Unit,
     onReplace: (Uri) -> Unit,
-    onVideoClick: () -> Unit
+    onVideoClick: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val exoPlayer = remember {
@@ -43,11 +43,19 @@ fun VideoItem(
         exoPlayer.prepare()
     }
 
-    DisposableEffect(video.videoUrl) {
+//    DisposableEffect(video.videoUrl) {
+//        onDispose {
+//            exoPlayer.release()
+//        }
+//    }
+
+    DisposableEffect(Unit) {
         onDispose {
+            exoPlayer.stop()
             exoPlayer.release()
         }
     }
+
 
     val replaceLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -60,7 +68,7 @@ fun VideoItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable { onVideoClick() },
+            .clickable { onVideoClick },
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),

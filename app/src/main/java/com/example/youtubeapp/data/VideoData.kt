@@ -1,10 +1,11 @@
 package com.example.youtubeapp.data
 
 import android.net.Uri
+
 data class VideoData(
-    val videoUrl : String,
-    val videoName : String,
-    val storagePath : String
+    val videoUrl: String,
+    val videoName: String,
+    val storagePath: String
 )
 
 sealed class Screen(val route: String) {
@@ -17,3 +18,9 @@ sealed class Screen(val route: String) {
         }
     }
 }
+
+data class VideoUiState(
+    val isLoading: Boolean = false,
+    val videos: List<VideoData> = emptyList(),
+    val errorMessage: String? = null
+)

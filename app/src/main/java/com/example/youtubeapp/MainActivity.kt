@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.example.youtubeapp.screen.AppNavigation
 import com.example.youtubeapp.screen.DisplayVideoScreen
 import com.example.youtubeapp.ui.theme.YouTubeAppTheme
 
@@ -18,7 +19,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             YouTubeAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DisplayVideoScreen(Modifier.padding(innerPadding))
+//                    DisplayVideoScreen(Modifier.padding(innerPadding))
+                    AppNavigation(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
